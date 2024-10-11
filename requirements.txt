@@ -1,0 +1,10 @@
+aiogram==3.12.0
+openai==0.28.0
+beautifulsoup4
+selenium
+undetected-chromedriver
+python-dotenv==0.21.1
+yfinance
+chardet
+telethon
+schedule
