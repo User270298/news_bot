@@ -1,6 +1,6 @@
 import asyncio
 from aiogram import Bot, Dispatcher
-from get_news import fetch_news, send_news_to_channel
+from get_news import fetch_news, send_news_to_channel, news_rus_eng, send_news_ai_rus_eng
 from config import OPENAI_API_KEY, CHANNEL_ID, API_TOKEN
 import logging
 from datetime import datetime
@@ -19,9 +19,9 @@ async def scheduled_news_sender():
     while True:
         try:
             now = datetime.now()
-            if now.hour in [7] and now.minute == 0:
-                news = await fetch_news()
-                await send_news_to_channel(news)
+            if now.hour in [11] and now.minute == 6:
+                news = await news_rus_eng()
+                await send_news_ai_rus_eng()
             await asyncio.sleep(60)
         except Exception as e:
             logging.error(f"Error fetching or sending news: {e}")
