@@ -1,13 +1,7 @@
-import asyncio
-
 import openai
-from config import OPENAI_API_KEY, CHANNEL_ID, API_TOKEN
-from parsers import oilworld_parser, prozerno_parser, zol_parser, agroinvestor_parser, aemcx_parser, agroinvestor, \
-    tg_channel, format_news, oleoscope, agrotrend_parse, interfaks_parse, agroxxi_parse  # Импортируй остальные парсеры
+from config import OPENAI_API_KEY, CHANNEL_ID, API_TOKEN, CHANNEL_ID_MAIN
 from price import final_output, txt_chicago, txt_moex, txt_matif
-# from selenium_parsers import collect_articles_text  # Импортируй функции для работы с Selenium
 from aiogram import Bot
-import datetime
 
 openai.api_key = OPENAI_API_KEY
 bot = Bot(token=API_TOKEN)
@@ -103,7 +97,8 @@ async def news_rus_eng():
 
     2. **Темы новостей**:
        Используй следующие темы для поиска и создания новостей:
-       GASC, TMO, TCP, OC, MIT, SAGO, GTC, OAIC, DGF, ODC, SLAL, OFAC, BRICS, CBOP, MATIF, AgRurual, strategie grains, safras & Mercado, intertek, amspec, пальмовое масло, посев, кукуруза, пшеница, соя, оценка производства, ячмень, прогноз урожая, usda отчет, задержка грузов, WHFOB, CRFOB, BRFOB, LCO, brent, ZS, соевые бобы, ZC, кукуруза, ZW, agritel, deepwater, shallowwater, FOB, CIF, Incoterms, GAFTA, FOSFA, SBPP, SFCO, SFMP, DDGS, pulses, WASDE, Report, Rabobank, Балтийский индекс, Индекс Panamax, S&P Global Commodity Insights, Abiove, Weekly Soybean Complex, IGC, oilworld.ru, FREE ON-BOARD BLACK SEA PORTS, SUNFLOWER OIL EXPORT, SUNFLOWER MEAL EXPORT, PRICE SUNFLOWER OIL U.S. DOLLAR METRIC TON, PALM OIL MALASYA CRUDE 1, NASDAQ (биржа) Commodity Index Bean Oil Excess Return, SOYBEAN OIL FUTURES FRONT-MONTH CONTRACT.
+       GASC, TMO, TCP, OC, MIT, SAGO, GTC, OAIC, DGF, ODC, SLAL, OFAC, BRICS, CBOP, MATIF, AgRurual, strategie grains, safras & Mercado, intertek, amspec, пальмовое масло, посев, кукуруза, пшеница, соя, оценка производства, ячмень, прогноз урожая, usda отчет, задержка грузов, WHFOB, CRFOB, BRFOB, LCO, brent, ZS, соевые бобы, ZC, кукуруза, ZW, agritel, deepwater, shallowwater, FOB, CIF, Incoterms, GAFTA, FOSFA, SBPP, SFCO, SFMP, DDGS, pulses, WASDE, Report, Rabobank, Балтийский индекс, Индекс Panamax, S&P Global Commodity Insights, Abiove, Weekly Soybean Complex, IGC, oilworld.ru, FREE ON-BOARD BLACK SEA PORTS, SUNFLOWER OIL EXPORT, SUNFLOWER MEAL EXPORT, PRICE SUNFLOWER OIL U.S. DOLLAR METRIC TON, PALM OIL MALASYA CRUDE 1, NASDAQ (биржа) Commodity Index Bean Oil Excess Return, SOYBEAN OIL FUTURES FRONT-MONTH CONTRACT, MARS, NOFI, MITS, FCPOc3, По сообщению агенства FryersOil world, Wheat France FOB, Wheat EU Black Sea FOB, Barley France FOB,Barley EU Black Sea, Corn Argentina FOB/
+        Corn EU Black Sea FOB, Ameropa ,MFG, adm , vittera , CHS , cereal crop , dahra, C&F, NOFI, commodity whether group, S&D, StoneX,KFA,Buildcom, Cargill , Bunge, Dreyfus, Olam , Avere, Wheat flour import, wheat flour export, MITS .
 
     3. **Пример формата новостей**:
        {file}
@@ -124,8 +119,8 @@ async def news_rus_eng():
         russian_news = response['choices'][0]['message']['content'].strip()
 
         # Убедимся, что текст не превышает 4000 символов
-        if len(russian_news) > 4000:
-            russian_news = russian_news[:4000]
+        if len(russian_news) > 3800:
+            russian_news = russian_news[:3800]
 
         # Перевод на английский
         translation_prompt = f"Please translate the following text to English:\n\n{russian_news}"
@@ -140,8 +135,8 @@ async def news_rus_eng():
         english_news = translation_response['choices'][0]['message']['content'].strip()
 
         # Убедимся, что текст на английском также не превышает 4000 символов
-        if len(english_news) > 4000:
-            english_news = english_news[:4000]
+        if len(english_news) > 3800:
+            english_news = english_news[:3800]
 
         return russian_news, english_news
 

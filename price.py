@@ -82,9 +82,6 @@ def get_cme_matif_prices():
     return cme_output
 
 
-
-
-
 def get_latest_data(ticker_dict):
     data = {}
     for name, ticker in ticker_dict.items():
@@ -167,11 +164,13 @@ def get_matif():
         else:
             print(f'Ошибка при запросе: {response.status_code}')
     return prices
+
+
 # Получение данных
 prices_cme = get_cme_matif_prices()
 prices = get_prices()
-
-# Форматированный вывод
+#
+# # Форматированный вывод
 final_output = (
     f"💵 USD/RUB: {prices.get('usd_rub', 'нет данных')}₽"
     f"💶 EUR/RUB: {prices.get('eur_rub', 'нет данных')}₽\n"
@@ -181,9 +180,8 @@ final_output = (
     f"😱 Bitcoin: {prices.get('btc_price', 'нет данных')}$\n"
     f"🛢 Brent Crude Oil: {prices.get('oil_price', 'нет данных')}$\n"
 )
-# print(final_output)
-# f"{prices_cme}\n"
 
+#
 ticker = {
     'Wheat_CHICAGO': 'ZW=F',  # Пшеница на CME
     'Soybeans_CHICAGO': 'ZS=F',  # Соя на CME
@@ -192,9 +190,44 @@ ticker = {
 }
 moex=get_maex()
 matif = get_matif()
-
-# Получение последних данных
+#
+# # Получение последних данных
 commodity_data = get_latest_data(ticker)
 txt_chicago = f"CHICAGO - {commodity_data['Wheat_CHICAGO']}$ wheat🌾, {commodity_data['Soybeans_CHICAGO']}$ soybeans🍈, {commodity_data['Corn_CHICAGO']}$ corn🌽 "
 txt_matif = f"MATIF - {matif['Wheat']['current_price']}$ wheat🌾, {matif['Rapeseed']['current_price']}$ rapeseed🌱, {matif['Corn']['current_price']}$ corn🌽 "
 txt_moex=f"MOEX - {moex['Wheat']['current_price']}$ wheat🌾, {moex['Barley']['current_price']}$ barley🥬, {moex['Corn']['current_price']}$ corn🌽 "
+#
+
+
+def get_telegram_subscribers() -> int | None:
+    # URL веб-виджета канала
+    url = f"https://t.me/s/agrocor_life"
+    data = {}
+    try:
+        response = requests.get(url)
+        if response.status_code != 200:
+            print("Не удалось подключиться к каналу")
+            return None
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # Находим блок с количеством подписчиков
+        subscriber_element = soup.find('div', class_='tgme_page_extra')
+        if subscriber_element:
+            # Извлекаем и возвращаем текст с числом подписчиков
+            subscriber_count = subscriber_element.get_text(strip=True)
+            subscriber_count = subscriber_count.split(' ')
+            new_text = ''
+            for i in subscriber_count[:2]:
+                new_text += i
+            print(f"Количество подписчиков: {int(new_text)}")
+            new_text= int(new_text)
+            return new_text
+        else:
+            print("Не удалось найти информацию о подписчиках")
+            return None
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        return None
+
+print(get_telegram_subscribers())
